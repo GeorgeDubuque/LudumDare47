@@ -5,19 +5,21 @@ using UnityEngine;
 public class Hands : MonoBehaviour
 {
 
-    BoxCollider2D coll;
+    CircleCollider2D coll;
     public float collTime = 0.2f;
     public float pickUpTime;
     public Transform pickUpPoint;
     public GameObject objInHands;
-    PlayerLooper playerLooper;
+    PlayerMovement movement;
+
+    public bool isHoldingSomething = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        coll = GetComponent<BoxCollider2D>();
+        movement = GetComponentInParent<PlayerMovement>();
+        coll = GetComponent<CircleCollider2D>();
         pickUpTime = Time.time;
-        playerLooper = GetComponentInParent<PlayerLooper>();
     }
 
     // Update is called once per frame
@@ -26,6 +28,10 @@ public class Hands : MonoBehaviour
         if(Time.time - pickUpTime > collTime)
         {
             coll.enabled = false;
+        }
+        if (isHoldingSomething)
+        {
+            objInHands.transform.up = Vector2.up;
         }
     }
 
@@ -37,30 +43,53 @@ public class Hands : MonoBehaviour
 
     public void LetGo()
     {
-        if(objInHands != null)
+        if(isHoldingSomething)
         {
+            isHoldingSomething = false;
+            movement.animator.SetBool("HoldingSomething", false);
+            movement.armsAnimator.SetBool("HoldingSomething", false);
             objInHands.transform.SetParent(null);
-            objInHands.GetComponent<BoxCollider2D>().enabled = true;
+            BoxCollider2D boxColl = objInHands.GetComponent<BoxCollider2D>();
+            CapsuleCollider2D capColl = objInHands.GetComponent<CapsuleCollider2D>();
+            if (boxColl)
+            {
+                boxColl.enabled = true;
+            }
+            if (capColl)
+            {
+                capColl.enabled = true;
+            }
+            Vector3 vel = objInHands.GetComponent<Rigidbody2D>().velocity;
+            vel.y *= 0;
+            objInHands.GetComponent<Rigidbody2D>().velocity = vel;
             objInHands.GetComponent<Rigidbody2D>().isKinematic = false;
-            coll.enabled = false;
-            transform.position = transform.parent.position + Vector3.right * transform.localScale.x;
             objInHands = null;
-            playerLooper.animator.SetTrigger("PutDown");
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameObject obj = collision.gameObject;
-        if(obj.layer != LayerMask.NameToLayer("Looper"))
+        if(obj.layer != LayerMask.NameToLayer("Looper") && obj.layer != LayerMask.NameToLayer("Shots"))
         {
+            isHoldingSomething = true;
+            movement.animator.SetBool("HoldingSomething", true);
+            movement.armsAnimator.SetBool("HoldingSomething", true);
             objInHands = obj;
             obj.transform.SetParent(transform);
-            obj.GetComponent<BoxCollider2D>().enabled = false;
+            obj.transform.position = transform.position;
+            BoxCollider2D boxColl = objInHands.GetComponent<BoxCollider2D>();
+            CapsuleCollider2D capColl = objInHands.GetComponent<CapsuleCollider2D>();
+            if (boxColl != null)
+            {
+                boxColl.enabled = false;
+            }
+            if (capColl != null)
+            {
+                capColl.enabled = false;
+            }
             obj.GetComponent<Rigidbody2D>().isKinematic = true;
-            coll.enabled = true;
             //transform.position = pickUpPoint.position;
-            playerLooper.animator.SetTrigger("PickUp");
         }
     }
 

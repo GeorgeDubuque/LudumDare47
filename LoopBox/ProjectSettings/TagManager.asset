@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Door
+  - Key
+  - Switch
+  - Death
   layers:
   - Default
   - TransparentFX
@@ -14,13 +18,13 @@ TagManager:
   - 
   - 
   - Looper
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Shots
+  - Ground
+  - Hands
+  - Player
+  - Pickup
+  - Switch
+  - MessageTrigger
   - 
   - 
   - 
@@ -40,4 +44,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: NoLight
+    uniqueID: 2460003861
     locked: 0

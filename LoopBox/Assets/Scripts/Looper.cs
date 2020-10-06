@@ -4,51 +4,58 @@ using UnityEngine;
 
 public class Looper : MonoBehaviour
 {
-    public Queue<Vector3> positionQueue;
-    public Queue<bool> pickUpQueue;
-    public int numFramesRecorded;
-    int currFrame = 0;
-    Rigidbody2D rb;
-    Hands hands;
-    PlayerLooper playerLooper;
+    public GameObject clonePrefab;
+    PlayerStats stats;
+    List<InputAtTime> inputRecording;
+    bool recording = false;
+    float recordStartTime = 0f;
+    float timeInRecording = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        hands = GetComponentInChildren<Hands>();
-        playerLooper = GetComponent<PlayerLooper>();
+        inputRecording = new List<InputAtTime>();
+        stats = GetComponent<PlayerStats>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 position = positionQueue.Dequeue();
-        bool pickUp = pickUpQueue.Dequeue();
-        Vector3 vel = position - transform.position;
-
-        if(currFrame == 0)
+        if (recording)
         {
-            transform.position = position;
+            InputAtTime inputAtTime = new InputAtTime();
+            inputAtTime.position = transform.position;
+            inputAtTime.time = timeInRecording;
+            inputAtTime.move = Input.GetAxis("Horizontal");
+            inputAtTime.jump = Input.GetButtonDown("Jump");
+            inputAtTime.jumping = Input.GetButton("Jump");
+            inputAtTime.pickUp = Input.GetButtonDown("PickUp");
+
+            inputRecording.Add(inputAtTime);
+            timeInRecording += Time.deltaTime;
         }
-        else
+    }
+
+    public void Record()
+    {
+        recording = !recording;
+        if (recording)
         {
-            rb.MovePosition(position);
+            timeInRecording = 0f;
         }
+    }
 
-        if (pickUp)
+    public void PlayRecording()
+    {
+        if(inputRecording.Count > 0)
         {
-            hands.PickUp();
+            GameObject clone = Instantiate(clonePrefab, null);
+            CloneController controller = clone.GetComponent<CloneController>();
+            controller.playTime = Time.time;
+            controller.recording = inputRecording;
+            clone.transform.position = controller.recording[0].position;
+            inputRecording = new List<InputAtTime>();
         }
-
-        positionQueue.Enqueue(position);
-        pickUpQueue.Enqueue(pickUp);
-        currFrame += 1;
-
-        if(currFrame >= numFramesRecorded)
-        {
-            currFrame = 0;
-        }
-
-        playerLooper.FlipCharacter(vel.x);
     }
 }
+
