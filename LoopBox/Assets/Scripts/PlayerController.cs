@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
         if (playerRecording)
         {
-            looper.PlayRecording();
+            looper.PlayPauseRecording();
         }
     }
 

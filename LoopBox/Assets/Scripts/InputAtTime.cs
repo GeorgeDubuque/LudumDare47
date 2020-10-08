@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class InputAtTime : MonoBehaviour
+public class InputAtTime
 {
     public Vector3 position;
     public float time = 0f;

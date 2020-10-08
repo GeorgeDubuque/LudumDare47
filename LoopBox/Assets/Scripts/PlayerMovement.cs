@@ -172,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Door"))
         {
-            if (hands.objInHands.CompareTag("Key"))
+            if (hands.objInHands && hands.objInHands.CompareTag("Key"))
             {
                 hands.objInHands = null;
                 string nextScene = collision.gameObject.GetComponent<Door>().nextLevelName;

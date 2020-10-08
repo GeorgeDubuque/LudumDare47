@@ -5,9 +5,11 @@ using UnityEngine;
 public class Looper : MonoBehaviour
 {
     public GameObject clonePrefab;
+    GameObject currLoop;
     PlayerStats stats;
     List<InputAtTime> inputRecording;
     bool recording = false;
+    bool loopActivated = false;
     float recordStartTime = 0f;
     float timeInRecording = 0f;
 
@@ -43,18 +45,39 @@ public class Looper : MonoBehaviour
         {
             timeInRecording = 0f;
         }
-    }
-
-    public void PlayRecording()
-    {
-        if(inputRecording.Count > 0)
+        else
         {
+            if (currLoop)
+            {
+                Destroy(currLoop);
+            }
+
+
             GameObject clone = Instantiate(clonePrefab, null);
             CloneController controller = clone.GetComponent<CloneController>();
             controller.playTime = Time.time;
             controller.recording = inputRecording;
             clone.transform.position = controller.recording[0].position;
+
+            currLoop = clone;
             inputRecording = new List<InputAtTime>();
+        }
+    }
+
+    public void PlayPauseRecording()
+    {
+        if(currLoop)
+        {
+            if (loopActivated)
+            {
+                loopActivated = false;
+                currLoop.GetComponent<CloneController>().ActivateLoop();
+            }
+            else
+            {
+                loopActivated = true;
+                currLoop.GetComponent<CloneController>().ActivateLoop();
+            }
         }
     }
 }
