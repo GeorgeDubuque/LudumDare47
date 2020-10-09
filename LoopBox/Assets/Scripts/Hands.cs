@@ -32,6 +32,8 @@ public class Hands : MonoBehaviour
         //if (objInHands)
         //{
         //    objInHands.transform.up = Vector2.up;
+        //    //objInHands.GetComponent<Rigidbody2D>().
+        //    objInHands.GetComponent<Rigidbody2D>().position  = (transform.position);
         //}
     }
 
@@ -60,7 +62,6 @@ public class Hands : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.name);
         GameObject obj = collision.gameObject;
         isHoldingSomething = true;
         movement.animator.SetBool("HoldingSomething", true);
@@ -68,7 +69,10 @@ public class Hands : MonoBehaviour
         objInHands = obj;
         obj.transform.SetParent(transform);
         obj.GetComponent<Rigidbody2D>().isKinematic = true;
-        obj.GetComponent<Collider2D>().enabled = false;
+        foreach(Collider2D coll in obj.GetComponents<Collider2D>())
+        {
+            coll.enabled = false;
+        }
         obj.transform.position = transform.position;
         //obj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }

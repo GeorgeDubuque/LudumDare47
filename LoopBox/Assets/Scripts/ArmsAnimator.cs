@@ -13,7 +13,10 @@ public class ArmsAnimator : MonoBehaviour
     {
         if (hands.objInHands)
         {
-            hands.objInHands.GetComponent<Collider2D>().enabled = true;
+            foreach(Collider2D coll in hands.objInHands.GetComponents<Collider2D>())
+            {
+                coll.enabled = true;
+            }
             hands.objInHands.transform.up = Vector2.up;
         }
     }

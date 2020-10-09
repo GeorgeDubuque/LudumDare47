@@ -74,6 +74,7 @@ public class CloneController : MonoBehaviour
         ChangeOpacity(1f);
         gameObject.layer = LayerMask.NameToLayer("Looper");
         hands.gameObject.layer = LayerMask.NameToLayer("Hands");
+        bodyPlatform.SetActive(true);
         bodyPlatform.layer = LayerMask.NameToLayer("BodyPlatform");
     }
     public void DeactivateLoop()
@@ -81,6 +82,7 @@ public class CloneController : MonoBehaviour
         ChangeOpacity(.5f);
         gameObject.layer = LayerMask.NameToLayer("Ghost");
         hands.gameObject.layer = LayerMask.NameToLayer("Ghost");
+        bodyPlatform.SetActive(false);
         bodyPlatform.layer = LayerMask.NameToLayer("Ghost");
     }
 

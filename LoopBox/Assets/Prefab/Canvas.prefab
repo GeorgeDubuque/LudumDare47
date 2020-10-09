@@ -508,6 +508,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8491387433642520363}
   - component: {fileID: 828873966197866515}
+  - component: {fileID: 830764188}
   m_Layer: 5
   m_Name: RecordUI
   m_TagString: Untagged
@@ -561,3 +562,20 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!114 &830764188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7787258384763252423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf08a7c4bb290bf4c96246617b7bbc1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recordTimeLeft: {fileID: 1237318805342343033}
+  recordBlinker: {fileID: 1237318804748898429}
+  playerStats: {fileID: 0}
+  looper: {fileID: 0}
+  blinkSpeed: 0.3

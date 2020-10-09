@@ -134,19 +134,19 @@ public class PlayerMovement : MonoBehaviour
     public bool IsGrounded()
     {
         Vector3 middleBottom = 
-            (transform.position + new Vector3(capColl.offset.x, capColl.offset.y, 0) * transform.localScale.x) + 
-            (Vector3.down * capColl.size.y/2) + 
+            (capColl.bounds.center + new Vector3(capColl.offset.x, capColl.offset.y, 0) ) + 
+            (Vector3.down * capColl.size.y) + 
             (Vector3.down * GROUND_RAYCAST_BUFFER);
 
         Vector3 middleRight = 
-            (transform.position + new Vector3(capColl.offset.x, capColl.offset.y, 0) * transform.localScale.x) + 
-            (Vector3.down * (capColl.size.y/2)) + 
+            (capColl.bounds.center + new Vector3(capColl.offset.x, capColl.offset.y, 0) ) + 
+            (Vector3.down * (capColl.size.y)) + 
             (Vector3.right * capColl.size.x/2) + 
             (Vector3.down * GROUND_RAYCAST_BUFFER);
 
         Vector3 middleLeft = 
-            (transform.position + new Vector3(capColl.offset.x, capColl.offset.y, 0) * transform.localScale.x) + 
-            (Vector3.down * capColl.size.y/2) + 
+            (capColl.bounds.center + new Vector3(capColl.offset.x, capColl.offset.y, 0) ) + 
+            (Vector3.down * capColl.size.y) + 
             (Vector3.left * capColl.size.x/2) + 
             (Vector3.down * GROUND_RAYCAST_BUFFER);
 

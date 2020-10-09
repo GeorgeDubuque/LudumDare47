@@ -5,10 +5,11 @@ using UnityEngine;
 public class Looper : MonoBehaviour
 {
     public GameObject clonePrefab;
+    List<GameObject> currLoops = new List<GameObject>();
     GameObject currLoop;
     PlayerStats stats;
     List<InputAtTime> inputRecording;
-    bool recording = false;
+    public bool recording = false;
     bool loopActivated = false;
     float recordStartTime = 0f;
     float timeInRecording = 0f;
@@ -35,33 +36,47 @@ public class Looper : MonoBehaviour
 
             inputRecording.Add(inputAtTime);
             timeInRecording += Time.deltaTime;
+            stats.recordLeft -= Time.deltaTime;
+            if(stats.recordLeft < 0)
+            {
+                stats.recordLeft = 0;
+                recording = false;
+                InstantiateClone();
+            }
         }
     }
 
     public void Record()
     {
-        recording = !recording;
-        if (recording)
+        if(stats.recordLeft > 0)
         {
-            timeInRecording = 0f;
-        }
-        else
-        {
-            if (currLoop)
+            recording = !recording;
+            if (recording)
             {
-                Destroy(currLoop);
+                timeInRecording = 0f;
             }
+            else
+            {
+                if (currLoop)
+                {
+                    //Destroy(currLoop);
+                }
 
-
-            GameObject clone = Instantiate(clonePrefab, null);
-            CloneController controller = clone.GetComponent<CloneController>();
-            controller.playTime = Time.time;
-            controller.recording = inputRecording;
-            clone.transform.position = controller.recording[0].position;
-
-            currLoop = clone;
-            inputRecording = new List<InputAtTime>();
+                InstantiateClone();
+            }
         }
+    }
+    void InstantiateClone()
+    {
+
+        GameObject clone = Instantiate(clonePrefab, null);
+        CloneController controller = clone.GetComponent<CloneController>();
+        controller.playTime = Time.time;
+        controller.recording = inputRecording;
+        clone.transform.position = controller.recording[0].position;
+
+        currLoop = clone;
+        inputRecording = new List<InputAtTime>();
     }
 
     public void PlayPauseRecording()
@@ -71,7 +86,7 @@ public class Looper : MonoBehaviour
             if (loopActivated)
             {
                 loopActivated = false;
-                currLoop.GetComponent<CloneController>().ActivateLoop();
+                currLoop.GetComponent<CloneController>().DeactivateLoop();
             }
             else
             {
